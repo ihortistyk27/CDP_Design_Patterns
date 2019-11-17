@@ -1,44 +1,33 @@
-import time
+class Image:
+    def __init__(self, filename):
+        self._filename = filename
 
+    def load_image_from_disk(self):
+        print("loading " + self._filename)
 
-class Producer:
-
-    def produce(self):
-        print("Working hard")
-
-    def meet(self):
-        print("Producer has time to meet you now!")
+    def display_image(self):
+        print("display " + self._filename)
 
 
 class Proxy:
-
-    def __init__(self):
-        self.occupied = "No"
-        self.producer = None
-
-    def produce(self):
-        """Check if Producer is available"""
-        print("Proxy Checking whether Producer is available")
-
-        if self.occupied == "No":
-            self.producer = Producer()
-            time.sleep(2)
-            self.producer.meet()
-        else:
-            time.sleep(2)
-            print("Producer is busy")
+    def __init__(self, subject):
+        self._subject = subject
+        self._proxystate = None
 
 
-# Instantiate the Proxy
-proxy = Proxy()
-
-# Make the Proxy: Artist produce until Producer is available
-proxy.produce()
-# Change the state to occupied
-proxy.occupied = "Yes"
-
-# Make the Producer produce
-proxy.produce()
+class ProxyImage(Proxy):
+    def display_image(self):
+        if self._proxystate == None:
+            self._subject.load_image_from_disk()
+            self._proxystate = 1
+        print("display " + self._subject._filename)
 
 
+proxy_image1 = ProxyImage(Image("HiRes_10Mb_Photo1"))
+proxy_image2 = ProxyImage(Image("HiRes_10Mb_Photo2"))
 
+proxy_image1.display_image()  # loading necessary
+proxy_image1.display_image()  # loading unnecessary
+proxy_image2.display_image()  # loading necessary
+proxy_image2.display_image()  # loading unnecessary
+proxy_image1.display_image()  # loading unnecessary
